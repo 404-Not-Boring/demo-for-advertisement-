@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Wedding Invitations — Live Demos</title>
+<meta name="description" content="Interactive digital wedding invitations with curtain reveals, live countdowns and built-in mini games.">
+<meta name="theme-color" content="#5c1524">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Digital Wedding Invitations — Live Demos">
+<meta property="og:description" content="Interactive digital wedding invitations with curtain reveals, live countdowns and built-in mini games.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Poppins:wght@400;500;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<style>
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    font-family:'Poppins', sans-serif;
+    background:#12151c;
+    color:#f3efe6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{ max-width:900px; margin:0 auto; padding:64px 24px 80px; }
+  header{ text-align:center; margin-bottom:56px; }
+  header .script{
+    font-family:'Dancing Script', cursive;
+    font-size:46px;
+    color:#e6c866;
+    margin:0 0 10px;
+  }
+  header p{
+    color:#b9b3a6;
+    max-width:52ch;
+    margin:0 auto;
+    line-height:1.6;
+    font-size:15px;
+  }
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+    gap:24px;
+  }
+  .card{
+    border-radius:20px;
+    padding:32px 26px;
+    border:1px solid rgba(255,255,255,0.1);
+    display:flex;
+    flex-direction:column;
+    min-height:340px;
+  }
+  .card.classic{ background:linear-gradient(160deg,#5c1524,#2c0a12); }
+  .card.beach{ background:linear-gradient(160deg,#146c94,#0b3347); }
+  .badge{
+    align-self:flex-start;
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    padding:6px 12px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,0.35);
+    margin-bottom:18px;
+  }
+  .card h2{
+    font-family:'Cormorant Garamond', serif;
+    font-size:30px;
+    margin:0 0 12px;
+  }
+  .card ul{
+    margin:0 0 26px;
+    padding-left:18px;
+    color:rgba(255,255,255,0.82);
+    font-size:14px;
+    line-height:1.85;
+  }
+  .card a{
+    margin-top:auto;
+    display:inline-block;
+    text-align:center;
+    background:#fff;
+    color:#1a1a1a;
+    text-decoration:none;
+    font-weight:600;
+    font-size:14px;
+    padding:14px 22px;
+    border-radius:999px;
+    transition:transform .15s ease;
+  }
+  .card a:hover{ transform:translateY(-2px); }
+  footer{
+    margin-top:56px;
+    text-align:center;
+    color:#7d7870;
+    font-size:13px;
+    line-height:1.7;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <p class="script">Digital Wedding Invitations</p>
+      <p>Interactive invitations your guests open on their phone — a curtain reveal, a live countdown to the big day, the venue and map, and a little game to play along the way. Tap a demo below.</p>
+    </header>
+
+    <div class="cards">
+      <div class="card classic">
+        <span class="badge">Style 01</span>
+        <h2>Maroon &amp; Gold</h2>
+        <ul>
+          <li>Theatre curtain reveal</li>
+          <li>Live countdown timer</li>
+          <li>Maze mini game</li>
+          <li>Details &amp; map link</li>
+        </ul>
+        <a href="classic.html">Open demo →</a>
+      </div>
+
+      <div class="card beach">
+        <span class="badge">Style 02</span>
+        <h2>Seaside Breeze</h2>
+        <ul>
+          <li>Beach cabana curtain reveal</li>
+          <li>Live countdown timer</li>
+          <li>Drag-and-drop photo puzzle</li>
+          <li>Details &amp; map link</li>
+        </ul>
+        <a href="beach.html">Open demo →</a>
+      </div>
+    </div>
+
+    <footer>
+      Demo invitations — names, dates and photos are placeholders.<br>
+      Every design is customised with your own names, colours, photos and venue.
+    </footer>
+  </div>
+</body>
+</html>

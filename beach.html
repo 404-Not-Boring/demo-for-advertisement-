@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karim &amp; Lara — Beach Wedding Invitation</title>
+<meta name="description" content="A breezy seaside wedding invitation with a live countdown and an interactive photo puzzle.">
+<meta name="theme-color" content="#146c94">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Karim &amp; Lara — Beach Wedding Invitation">
+<meta property="og:description" content="A breezy seaside wedding invitation with a live countdown and an interactive photo puzzle.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Karim &amp; Lara — Beach Wedding Invitation">
+<meta name="twitter:description" content="A breezy seaside wedding invitation with a live countdown and an interactive photo puzzle.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@400;500;600&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ocean-deep:#0b4a63;
+    --ocean:#146c94;
+    --ocean-light:#19a7ce;
+    --turquoise:#5fd6c4;
+    --sand:#fffaf0;
+    --sand-page:#eaf6f6;
+    --coral:#ff8a65;
+    --ink:#123a4a;
+    /* Swap this one URL to change the puzzle picture */
+    --puzzle-img:url('https://images.pexels.com/photos/3601366/pexels-photo-3601366.jpeg?auto=compress&cs=tinysrgb&w=800');
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  html.locked, html.locked body{ overflow:hidden; height:100%; }
+  body{
+    font-family:'Quicksand', sans-serif;
+    background:var(--sand-page);
+    color:var(--ink);
+  }
+  .page{
+    max-width:480px;
+    margin:0 auto;
+    background:var(--sand);
+    position:relative;
+    min-height:100vh;
+    box-shadow:0 0 60px rgba(0,0,0,0.08);
+  }
+  .caps{
+    font-family:'Poppins', sans-serif;
+    letter-spacing:0.12em;
+    font-weight:600;
+  }
+  .script{
+    font-family:'Dancing Script', cursive;
+    line-height:1.1;
+  }
+  section{
+    min-height:100vh;
+    padding:56px 30px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    position:relative;
+  }
+
+  .wave-divider{
+    position:absolute;
+    left:0; right:0;
+    height:36px;
+    background-repeat:repeat-x;
+    background-size:60px 36px;
+    opacity:0.5;
+  }
+  .wave-divider.top{ top:0; background-image: radial-gradient(circle at 30px 0, transparent 20px, var(--ocean-light) 21px); }
+
+  .scroll-cue{
+    margin-top:32px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+  }
+  .scroll-cue .circle{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    border:1.5px solid var(--turquoise);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--ocean);
+  }
+  .scroll-cue .circle svg{ width:16px; height:16px; }
+  .scroll-cue span{
+    font-size:12px;
+    letter-spacing:0.18em;
+    color:var(--ocean);
+  }
+  .on-dark .scroll-cue span{ color:var(--sand); }
+
+  /* ---------------- Intro / sheer curtain reveal ---------------- */
+  #introSection{
+    position:relative;
+    padding:0;
+    overflow:hidden;
+    background:var(--ocean-deep);
+  }
+  .scene-bg{
+    position:absolute;
+    inset:0;
+  }
+  .scene-bg img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .scene-bg::after{
+    content:'';
+    position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(11,74,99,0.15) 0%, rgba(11,74,99,0.55) 100%);
+  }
+
+  /* Beach cabana curtains: cream + ocean stripes with fabric shading */
+  .sheer-left, .sheer-right{
+    position:absolute;
+    top:0; bottom:0;
+    width:52%;
+    z-index:5;
+    background:
+      repeating-linear-gradient(90deg,
+        rgba(0,0,0,0.10) 0 2px,
+        rgba(255,255,255,0.00) 2px 13px,
+        rgba(0,0,0,0.07) 13px 15px,
+        rgba(255,255,255,0.00) 15px 26px),
+      repeating-linear-gradient(90deg,
+        #fffaf0 0 26px,
+        #19a7ce 26px 52px,
+        #fffaf0 52px 78px,
+        #5fd6c4 78px 104px);
+    box-shadow: inset 0 0 50px rgba(11,74,99,0.20);
+    transition: transform 1.1s cubic-bezier(.7,0,.2,1);
+  }
+  .sheer-left{ left:0; }
+  .sheer-right{ right:0; }
+  /* scalloped valance along the bottom edge */
+  .sheer-left::after, .sheer-right::after{
+    content:'';
+    position:absolute; left:0; right:0; bottom:-1px; height:24px;
+    background: radial-gradient(circle at 13px 100%, #fffaf0 12px, transparent 13px);
+    background-size:26px 24px;
+    background-repeat:repeat-x;
+  }
+  /* rod / top rail */
+  .sheer-left::before, .sheer-right::before{
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:16px;
+    background:linear-gradient(180deg, #0b4a63, #146c94);
+    box-shadow:0 2px 6px rgba(0,0,0,0.25);
+  }
+  #introSection.opened .sheer-left{ transform:translateX(-105%); }
+  #introSection.opened .sheer-right{ transform:translateX(105%); }
+
+  /* Sun rising behind the curtains */
+  .beach-sun{
+    position:absolute;
+    top:52px; left:50%;
+    transform:translateX(-50%);
+    z-index:2;
+    width:160px; height:160px;
+    pointer-events:none;
+  }
+  .beach-sun svg{ width:100%; height:100%; display:block; }
+  .beach-sun .rays{
+    transform-origin:50% 50%;
+    animation:sunspin 60s linear infinite;
+  }
+  @keyframes sunspin{ to{ transform:rotate(360deg); } }
+
+  .open-btn{
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    z-index:6;
+    background:var(--ocean);
+    border:1.5px solid var(--turquoise);
+    color:#fff;
+    font-family:'Poppins', sans-serif;
+    letter-spacing:0.12em;
+    font-size:13px;
+    padding:16px 30px;
+    border-radius:999px;
+    cursor:pointer;
+  }
+  #introSection.opened .open-btn{ display:none; }
+
+  /* ---------------- Hero ---------------- */
+  #hero{ background:var(--sand); }
+  #hero .caps.title{
+    font-size:15px;
+    color:var(--ocean);
+    margin-bottom:8px;
+  }
+  #hero .sub{
+    font-size:17px;
+    color:#5b8a97;
+    margin-bottom:18px;
+  }
+  #hero .names{
+    font-size:58px;
+    color:var(--ocean-deep);
+    margin-bottom:22px;
+  }
+  .couple-photos{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+  }
+  .photo-frame{
+    width:148px;
+    height:186px;
+    border-radius:100px 100px 16px 16px;
+    border:3px solid var(--turquoise);
+    overflow:hidden;
+    box-shadow:0 14px 26px rgba(11,74,99,0.18);
+  }
+  .photo-frame img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .couple-photos .heart{ color:var(--coral); font-size:22px; }
+
+  /* ---------------- Countdown ---------------- */
+  #countdown{
+    background: linear-gradient(180deg, var(--ocean) 0%, var(--ocean-deep) 100%);
+    color:#fff;
+  }
+  #countdown h2{ font-size:26px; margin-bottom:16px; }
+  .rule{
+    width:64px;
+    height:2px;
+    background:var(--turquoise);
+    margin:0 auto 30px;
+  }
+  .stats{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .stats .stat{
+    background:rgba(255,255,255,0.95);
+    color:var(--ocean-deep);
+    border-radius:16px;
+    width:74px;
+    padding:16px 0;
+  }
+  .stats .stat strong{
+    display:block;
+    font-family:'Poppins', sans-serif;
+    font-size:24px;
+  }
+  .stats .stat span{
+    display:block;
+    font-size:10px;
+    letter-spacing:0.1em;
+    margin-top:4px;
+  }
+
+  /* ---------------- Puzzle ---------------- */
+  #puzzle{ background:var(--sand-page); }
+  .puzzle-instructions{ font-weight:600; color:var(--ink); margin-bottom:22px; font-size:16px; max-width:26ch; }
+
+  #puzzleBoard{
+    position:relative;
+    width:270px;
+    height:180px;
+    border-radius:14px;
+    border:3px solid var(--turquoise);
+    background:#dff4f2;
+    overflow:hidden;
+    touch-action:none;
+    box-shadow:0 10px 22px rgba(11,74,99,0.16);
+  }
+  /* faded preview of the finished picture so guests can see the goal */
+  #puzzleBoard .ghost{
+    position:absolute; inset:0;
+    background-image:var(--puzzle-img);
+    background-size:cover;
+    background-position:center;
+    opacity:0.18;
+    filter:grayscale(0.4);
+  }
+  .slot{
+    position:absolute;
+    width:90px; height:90px;
+    border:1px dashed rgba(20,108,148,0.35);
+    box-sizing:border-box;
+  }
+  .piece{
+    position:absolute;
+    top:0; left:0;
+    width:90px; height:90px;
+    background-image:var(--puzzle-img);
+    background-size:270px 180px;
+    background-repeat:no-repeat;
+    border-radius:6px;
+    box-shadow:0 6px 14px rgba(11,74,99,0.28);
+    cursor:grab;
+    z-index:10;
+    border:1.5px solid rgba(255,255,255,0.8);
+    touch-action:none;
+    visibility:hidden;
+  }
+  .piece.ready{ visibility:visible; }
+  .piece.placed{
+    cursor:default;
+    box-shadow:none;
+    border:none;
+    border-radius:0;
+    z-index:6;
+  }
+  .piece.dragging{
+    z-index:50;
+    cursor:grabbing;
+    box-shadow:0 14px 26px rgba(11,74,99,0.42);
+  }
+
+  #puzzleTray{
+    margin-top:26px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    justify-content:center;
+    max-width:310px;
+    min-height:100px;
+  }
+  .tray-slot{
+    width:90px; height:90px;
+    border-radius:8px;
+    border:1.5px dashed rgba(20,108,148,0.25);
+    background:rgba(255,255,255,0.45);
+  }
+
+  #puzzleWin{
+    margin-top:20px;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+  }
+  #puzzleWin .script{ font-size:30px; color:var(--ocean-deep); }
+  #puzzleWin p.caps{ font-size:12px; color:var(--ocean); }
+
+  /* ---------------- Details ---------------- */
+  #details{ background:var(--sand); }
+  .details-card{
+    background:var(--ocean-deep);
+    color:#fff;
+    border-radius:26px;
+    width:100%;
+    max-width:340px;
+    padding:44px 30px;
+  }
+  .details-card h2{ font-size:24px; margin-bottom:22px; }
+  .detail-row{ margin:22px 0; }
+  .detail-row svg{ width:24px; height:24px; margin-bottom:8px; }
+  .detail-row .label{ color:var(--turquoise); font-weight:600; margin-bottom:4px; }
+  .detail-row .value{ font-size:18px; }
+  .thin-rule{ width:40px; height:1px; background:rgba(95,214,196,0.5); margin:22px auto; }
+
+  /* ---------------- Location ---------------- */
+  #location{ background:var(--sand-page); }
+  .location-card{
+    background:var(--sand);
+    border:1.5px solid var(--turquoise);
+    border-radius:22px;
+    padding:34px 26px;
+    max-width:340px;
+    width:100%;
+  }
+  .pin-badge{
+    width:64px; height:64px;
+    border-radius:50%;
+    border:1.5px solid var(--turquoise);
+    display:flex; align-items:center; justify-content:center;
+    margin:0 auto 16px;
+  }
+  .location-card .eyebrow{ font-size:12px; letter-spacing:0.12em; color:#5b8a97; margin-bottom:8px; }
+  .location-card h3{ color:var(--ocean-deep); font-size:22px; margin-bottom:6px; }
+  .location-card .addr{ color:#5b8a97; margin-bottom:22px; }
+  .open-loc{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--ocean);
+    color:#fff;
+    padding:12px 24px;
+    border-radius:999px;
+    text-decoration:none;
+    font-family:'Quicksand';
+    font-weight:600;
+  }
+
+  /* ---------------- Closing ---------------- */
+  #closing{ background:var(--sand); }
+  #closing .script.big{ font-size:32px; color:var(--ocean-deep); margin-bottom:16px; }
+  #closing .names-sm{ color:#5b8a97; letter-spacing:0.05em; }
+
+  @media (prefers-reduced-motion: reduce){
+    .sheer-left, .sheer-right{ transition:none; }
+    .beach-sun .rays{ animation:none; }
+    .piece{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Intro reveal -->
+  <section id="introSection">
+    <div class="scene-bg">
+      <img src="https://images.pexels.com/photos/169185/pexels-photo-169185.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Beachfront wedding setup">
+    </div>
+    <div class="beach-sun">
+      <svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <radialGradient id="sunGrad" cx="50%" cy="45%" r="60%">
+            <stop offset="0%" stop-color="#fff8dd"/>
+            <stop offset="55%" stop-color="#ffd166"/>
+            <stop offset="100%" stop-color="#ff9d3d"/>
+          </radialGradient>
+          <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffd166" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#ffd166" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="80" cy="80" r="78" fill="url(#sunGlow)"/>
+        <g class="rays" stroke="#ffd166" stroke-width="5" stroke-linecap="round" opacity="0.95">
+          <line x1="80" y1="8" x2="80" y2="26"/>
+          <line x1="80" y1="134" x2="80" y2="152"/>
+          <line x1="8" y1="80" x2="26" y2="80"/>
+          <line x1="134" y1="80" x2="152" y2="80"/>
+          <line x1="29" y1="29" x2="42" y2="42"/>
+          <line x1="118" y1="118" x2="131" y2="131"/>
+          <line x1="131" y1="29" x2="118" y2="42"/>
+          <line x1="42" y1="118" x2="29" y2="131"/>
+        </g>
+        <circle cx="80" cy="80" r="36" fill="url(#sunGrad)"/>
+      </svg>
+    </div>
+    <div class="sheer-left"></div>
+    <div class="sheer-right"></div>
+    <button class="open-btn caps" id="openBtn">Tap to begin our story</button>
+    <div class="scroll-cue on-dark" style="position:absolute; bottom:30px; left:50%; transform:translateX(-50%); z-index:2;">
+      <div class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <span class="caps">Scroll down</span>
+    </div>
+  </section>
+
+  <!-- Hero -->
+  <section id="hero">
+    <p class="caps title">Together with the sea and sky</p>
+    <p class="sub">we invite you to the wedding of</p>
+    <h1 class="script names">Karim &amp; Lara</h1>
+    <div class="couple-photos">
+      <div class="photo-frame">
+        <img src="https://images.pexels.com/photos/11055558/pexels-photo-11055558.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Karim">
+      </div>
+      <span class="heart">&#10084;</span>
+      <div class="photo-frame">
+        <img src="https://images.pexels.com/photos/16910979/pexels-photo-16910979.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Lara">
+      </div>
+    </div>
+    <div class="scroll-cue">
+      <div class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <span class="caps" style="color:var(--ocean);">Scroll down</span>
+    </div>
+  </section>
+
+  <!-- Countdown -->
+  <section id="countdown">
+    <h2 class="caps">Counting down to<br>our beach day</h2>
+    <div class="rule"></div>
+    <div class="stats">
+      <div class="stat"><strong id="cd-days">00</strong><span class="caps">Days</span></div>
+      <div class="stat"><strong id="cd-hours">00</strong><span class="caps">Hours</span></div>
+      <div class="stat"><strong id="cd-mins">00</strong><span class="caps">Minutes</span></div>
+      <div class="stat"><strong id="cd-secs">00</strong><span class="caps">Seconds</span></div>
+    </div>
+  </section>
+
+  <!-- Puzzle game -->
+  <section id="puzzle">
+    <p class="caps" style="color:var(--ocean); font-size:13px; margin-bottom:10px;">A little game</p>
+    <p class="puzzle-instructions">Drag the pieces into place to reveal our journey together</p>
+
+    <div id="puzzleBoard">
+      <div class="ghost"></div>
+      <!-- slots + pieces injected by JS -->
+    </div>
+
+    <div id="puzzleTray"></div>
+
+    <div id="puzzleWin">
+      <p class="script">Paradise found</p>
+      <p class="caps">Karim &amp; Lara</p>
+    </div>
+  </section>
+
+  <!-- Wedding details -->
+  <section id="details">
+    <div class="details-card">
+      <h2 class="caps">Wedding<br>Details</h2>
+      <div class="rule" style="margin-bottom:0;"></div>
+      <div class="detail-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--turquoise)" stroke-width="1.6"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 3v4M16 3v4"/><path d="M12 14l1.5 1.5L15.5 13"/></svg>
+        <div class="label caps">Date</div>
+        <div class="value">Friday, 11 June 2027</div>
+      </div>
+      <div class="thin-rule"></div>
+      <div class="detail-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--turquoise)" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        <div class="label caps">Time</div>
+        <div class="value">7:00 PM</div>
+      </div>
+      <div class="thin-rule"></div>
+      <div class="detail-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--turquoise)" stroke-width="1.6"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+        <div class="label caps">Venue</div>
+        <div class="value">Coral Bay Pavilion</div>
+        <div class="value" style="opacity:0.75;">Meridian Resort, Beachfront</div>
+      </div>
+    </div>
+    <div class="scroll-cue">
+      <div class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <span class="caps" style="color:var(--ocean);">Scroll down</span>
+    </div>
+  </section>
+
+  <!-- Location -->
+  <section id="location">
+    <div class="location-card">
+      <h3 class="caps" style="text-align:center; color:var(--ocean-deep); font-size:24px; margin-bottom:16px;">Location</h3>
+      <div class="rule"></div>
+      <div class="pin-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--turquoise)" stroke-width="1.6" width="26" height="26"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+      </div>
+      <p class="eyebrow caps" style="text-align:center;">Wedding Venue</p>
+      <h3 style="text-align:center;">Coral Bay Pavilion</h3>
+      <p class="addr" style="text-align:center;">Meridian Resort, Beachfront</p>
+      <div style="text-align:center;">
+        <a class="open-loc" href="https://www.google.com/maps/search/?api=1&query=Meridian+Resort+Beachfront" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg>
+          Open Location
+        </a>
+      </div>
+    </div>
+    <div class="scroll-cue" style="margin-top:34px;">
+      <div class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+    </div>
+  </section>
+
+  <!-- Closing -->
+  <section id="closing">
+    <div class="rule" style="background:var(--turquoise);"></div>
+    <p class="script big">We can't wait to celebrate with you by the sea!</p>
+    <p class="names-sm caps">Karim &amp; Lara</p>
+  </section>
+
+</div>
+
+<script>
+  document.documentElement.classList.add('locked');
+
+  document.getElementById('openBtn').addEventListener('click', function(){
+    document.getElementById('introSection').classList.add('opened');
+    document.documentElement.classList.remove('locked');
+  });
+
+  // Countdown
+  var target = new Date('2027-06-11T19:00:00');
+  function updateCountdown(){
+    var now = new Date();
+    var diff = Math.max(0, target - now);
+    var days = Math.floor(diff / 86400000);
+    var hours = Math.floor((diff / 3600000) % 24);
+    var mins = Math.floor((diff / 60000) % 60);
+    var secs = Math.floor((diff / 1000) % 60);
+    document.getElementById('cd-days').textContent = String(days).padStart(2,'0');
+    document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
+    document.getElementById('cd-mins').textContent = String(mins).padStart(2,'0');
+    document.getElementById('cd-secs').textContent = String(secs).padStart(2,'0');
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  /* ---------------- Puzzle: drag pieces to reveal photo ---------------- */
+  (function(){
+    var BOARD_W = 270, BOARD_H = 180, COLS = 3, ROWS = 2;
+    var PIECE_W = BOARD_W / COLS, PIECE_H = BOARD_H / ROWS;
+
+    var section = document.getElementById('puzzle');   // position:relative from the section rule
+    var board   = document.getElementById('puzzleBoard');
+    var tray    = document.getElementById('puzzleTray');
+    var winBox  = document.getElementById('puzzleWin');
+    var totalPieces = COLS * ROWS;
+    var placedCount = 0;
+
+    // Position of an element relative to the puzzle section (scroll-proof)
+    function relTo(el, host){
+      var r = el.getBoundingClientRect();
+      var h = host.getBoundingClientRect();
+      return { left: r.left - h.left, top: r.top - h.top };
+    }
+
+    // --- board slots ---
+    var slots = [];
+    for (var r = 0; r < ROWS; r++){
+      for (var c = 0; c < COLS; c++){
+        var slot = document.createElement('div');
+        slot.className = 'slot';
+        slot.style.left = (c * PIECE_W) + 'px';
+        slot.style.top  = (r * PIECE_H) + 'px';
+        slot.style.width  = PIECE_W + 'px';
+        slot.style.height = PIECE_H + 'px';
+        slot.dataset.index = r * COLS + c;
+        slot.dataset.filled = 'false';
+        board.appendChild(slot);
+        slots.push(slot);
+      }
+    }
+
+    // --- shuffled order for the tray ---
+    var order = [];
+    for (var i = 0; i < totalPieces; i++) order.push(i);
+    for (var i = order.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = order[i]; order[i] = order[j]; order[j] = t;
+    }
+
+    // --- tray placeholders keep the layout stable ---
+    var trayHomes = [];
+    for (var k = 0; k < totalPieces; k++){
+      var home = document.createElement('div');
+      home.className = 'tray-slot';
+      tray.appendChild(home);
+      trayHomes.push(home);
+    }
+
+    // --- the draggable pieces, parented to the section ---
+    var pieces = [];
+    order.forEach(function(pieceIndex, trayPos){
+      var pr = Math.floor(pieceIndex / COLS);
+      var pc = pieceIndex % COLS;
+      var piece = document.createElement('div');
+      piece.className = 'piece';
+      piece.style.width  = PIECE_W + 'px';
+      piece.style.height = PIECE_H + 'px';
+      piece.style.backgroundPosition = (-pc * PIECE_W) + 'px ' + (-pr * PIECE_H) + 'px';
+      piece.dataset.correct = pieceIndex;
+      piece.dataset.trayPos = trayPos;
+      piece.dataset.placed  = 'false';
+      section.appendChild(piece);
+      pieces.push(piece);
+    });
+
+    function sendHome(piece){
+      var home = trayHomes[parseInt(piece.dataset.trayPos, 10)];
+      var p = relTo(home, section);
+      piece.style.left = p.left + 'px';
+      piece.style.top  = p.top  + 'px';
+      piece.classList.add('ready');
+    }
+
+    function layout(){
+      pieces.forEach(function(piece){
+        if (piece.dataset.placed === 'true'){
+          var slot = slots[parseInt(piece.dataset.correct, 10)];
+          var p = relTo(slot, section);
+          piece.style.left = p.left + 'px';
+          piece.style.top  = p.top  + 'px';
+        } else {
+          sendHome(piece);
+        }
+      });
+    }
+
+    // Lay out once fonts/images have settled, and again on resize.
+    requestAnimationFrame(function(){ requestAnimationFrame(layout); });
+    window.addEventListener('load', layout);
+    window.addEventListener('resize', layout);
+
+    // --- dragging ---
+    var active = null, offsetX = 0, offsetY = 0;
+
+    function down(e){
+      var piece = e.currentTarget;
+      if (piece.dataset.placed === 'true') return;
+      e.preventDefault();
+      active = piece;
+      piece.classList.add('dragging');
+      try { piece.setPointerCapture(e.pointerId); } catch(err){}
+      var pr = piece.getBoundingClientRect();
+      offsetX = e.clientX - pr.left;
+      offsetY = e.clientY - pr.top;
+    }
+
+    function move(e){
+      if (!active) return;
+      e.preventDefault();
+      var h = section.getBoundingClientRect();
+      active.style.left = (e.clientX - offsetX - h.left) + 'px';
+      active.style.top  = (e.clientY - offsetY - h.top)  + 'px';
+    }
+
+    function up(e){
+      if (!active) return;
+      var piece = active;
+      active = null;
+      piece.classList.remove('dragging');
+
+      // Match by the piece's own centre, not the fingertip - much easier to land.
+      var pr = piece.getBoundingClientRect();
+      var cx = pr.left + pr.width / 2;
+      var cy = pr.top  + pr.height / 2;
+
+      var wanted = slots[parseInt(piece.dataset.correct, 10)];
+      var wr = wanted.getBoundingClientRect();
+      var near = Math.abs(cx - (wr.left + wr.width / 2)) < PIECE_W * 0.7 &&
+                 Math.abs(cy - (wr.top  + wr.height / 2)) < PIECE_H * 0.7;
+
+      if (near && wanted.dataset.filled === 'false'){
+        var p = relTo(wanted, section);
+        piece.style.left = p.left + 'px';
+        piece.style.top  = p.top  + 'px';
+        piece.classList.add('placed');
+        piece.dataset.placed = 'true';
+        wanted.dataset.filled = 'true';
+        placedCount++;
+        if (placedCount === totalPieces){
+          setTimeout(function(){ winBox.style.display = 'flex'; }, 250);
+        }
+      } else {
+        sendHome(piece);
+      }
+    }
+
+    pieces.forEach(function(piece){
+      piece.addEventListener('pointerdown', down);
+      piece.addEventListener('pointermove', move);
+      piece.addEventListener('pointerup', up);
+      piece.addEventListener('pointercancel', up);
+    });
+  })();
+</script>
+
+</body>
+</html>
